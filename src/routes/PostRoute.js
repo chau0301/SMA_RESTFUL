@@ -10,4 +10,5 @@ router.delete('/:id', PostController.deletePost)
 router.put('/:id/like', PostController.likePost)
 router.get('/:id/timeline', PostController.getTimelinePost)
 
+
 module.exports = router

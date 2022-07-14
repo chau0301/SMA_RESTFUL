@@ -4,6 +4,20 @@ const argon2 = require('argon2')
 require('dotenv').config()
 const User = require('../models/userModel')
 
+const isValidUsername = (username) => {
+    const minLength = 8
+    const maxLength = 16
+    const pattern = /^[a-z0-9]{3,15}$/
+    return username.match(pattern) !== null
+}
+const isValidPassword = (password) => {
+    const minLength = 8
+    const maxLength = 16
+    if (password.indexOf(' ') !== -1) return false
+    const pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
+    return password.match(pattern) !== null
+}
+
 class AuthController {
     // [POST]
     // register new account
@@ -11,6 +25,16 @@ class AuthController {
     async register(req, res) {
         let {username, password, firstname, lastname} = req.body
         username = username.toLowerCase()
+        username = username.trim()
+        password = password.trim()
+        firstname = firstname.trim()
+        lastname = lastname.trim()
+        if (!isValidUsername(username)) {
+            res.status(400).json({success: false, message: 'Username is not valid'})
+        }
+        if (!isValidPassword(password)) {
+            res.status(400).json({success: false, message: 'Password is not valid'})
+        }
         //simple validation
         if (!username || !password || !firstname || !lastname) {
             res.status(400).json({success: false, message: 'Missing information'})

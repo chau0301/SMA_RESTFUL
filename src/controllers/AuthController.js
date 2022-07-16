@@ -38,33 +38,34 @@ class AuthController {
         //simple validation
         if (!username || !password || !firstname || !lastname) {
             res.status(400).json({success: false, message: 'Missing information'})
-        }
+        } else {
         try {
             const existing = await User.findOne({username})
             if (existing) {
                 res.status(400).json({success: false, message: "username already taken"})
             }
-            
             else {
                 const hashedPassword = await argon2.hash(password)
                 const newUser = new User({ username, password: hashedPassword, firstname, lastname })
                 await newUser.save()
                 const accessToken = jwt.sign({userId : newUser._id}, process.env.SECRET_KEY, {expiresIn: process.env.EXPIRES_TIME})
-                res.status(201).json({success: true, message: 'Register successfully!!', user: newUser, token: accessToken})
+                res.json({success: true, message: 'Register successfully!!', user: newUser, token: accessToken})
             }
         } catch (error) {
             console.log(error)
             res.status(500).json({success: false, message: 'Internal server error'})
-        }
-
+        }}
     }
+    // [POST]
+    // login account
+    // public
     async login(req, res) {
         let {username, password} = req.body
         username = username.toLowerCase()
         //simple validation
         if (!username || !password) {
             res.status(400).json({success: false, message: 'Missing information'})
-        }
+        } else {
         try {
             const account = await User.findOne({username: username})
             if (!account) {
@@ -83,7 +84,7 @@ class AuthController {
         } catch (error) {
             console.log(error)
             res.status(500).json({success: false, message: 'Internal server error'})
-        }
+        }}
     }
 }
 

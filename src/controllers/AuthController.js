@@ -7,14 +7,14 @@ const User = require('../models/userModel')
 const isValidUsername = (username) => {
     const minLength = 8
     const maxLength = 16
-    const pattern = /^[a-z0-9]{3,15}$/
+    const pattern = /^[a-z0-9]{8,16}$/
     return username.match(pattern) !== null
 }
 const isValidPassword = (password) => {
     const minLength = 8
     const maxLength = 16
     if (password.indexOf(' ') !== -1) return false
-    const pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
+    const pattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,16}$/
     return password.match(pattern) !== null
 }
 
